@@ -24,7 +24,7 @@
         <tbody></tbody>
     </table>
     <script>
-        let api = 'https://script.google.com/macros/s/AKfycbzydsOK7nI8QvcmhNcQGS99wpVMGkHiQjQ3mFB0FS4gD8lXqhuCdiXVQf5yUodtZRdZ/exec';
+        let api = 'https://script.google.com/macros/s/AKfycbyIYjwz1IWCAJSgg6IcIOdxQMMdpQhRGCchK_dtb0E4sF6BUfUupIL--uVPyPb02tXg/exec';
         let form = document.querySelector("form");
         let add = document.querySelector(".add");
         let update = document.querySelector(".update");
@@ -45,6 +45,18 @@
                     form.reset();
                 });
         }
+        function readData(){
+            fetch(api)
+            .then(res=>res.json())
+            .then(data=>{
+                let todo = data.todo;
+                let trtd = todo.map(each=>{
+                    return '  <tr> <td class="id">' + each[0] + ' </td><td class="data"> '+each[1]+'</td><td class="edit"onclick="">Edit</td> <td class="delete"onclick="">DELETE</td>    </tr>' 
+                })
+                tbody.innerHTML=trtd.join("")
+            })
+        }
+        readData()
     </script>
 </body>
 </html>
