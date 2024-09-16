@@ -86,11 +86,16 @@
             update.setAttribute("onclick",'updateData('+id+')')
         }
         function updateData(id){
+            update.textContent="Updating.. "
             fetch(api + '?update=true&id='+id+'&data='+form[0].value)
             .then(res=>res.text())
             .then(data=>{
                 readData()
                 alert(data)
+                form.reset()
+            update.textContent="Update Todo"
+            add.style.display="unset"
+            update.style.display="none"
             })
         }
     </script>
