@@ -5,6 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .edit,.delete{
+            background-color: red;
+            cursor: pointer;
+            color: white;
+            padding: 3px;
+            border-radius: 5px;
+        }
+        .update{
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <form action="">
@@ -24,7 +36,7 @@
         <tbody></tbody>
     </table>
     <script>
-        let api = 'https://script.google.com/macros/s/AKfycbyIYjwz1IWCAJSgg6IcIOdxQMMdpQhRGCchK_dtb0E4sF6BUfUupIL--uVPyPb02tXg/exec';
+        let api = 'https://script.google.com/macros/s/AKfycbztR4WOEpCS1zrJqxikfgcRwESnuEigaaoTayW3gcD5xNMMDy3AsUkjx4PxOw8TDvRn/exec';
         let form = document.querySelector("form");
         let add = document.querySelector(".add");
         let update = document.querySelector(".update");
@@ -40,6 +52,7 @@
             })
                 .then(res => res.text())
                 .then(data => {
+                    readData()
                     alert(data)
                     add.textContent="Add Todo"
                     form.reset();
@@ -51,12 +64,35 @@
             .then(data=>{
                 let todo = data.todo;
                 let trtd = todo.map(each=>{
-                    return '  <tr> <td class="id">' + each[0] + ' </td><td class="data"> '+each[1]+'</td><td class="edit"onclick="">Edit</td> <td class="delete"onclick="">DELETE</td>    </tr>' 
+                    return '  <tr> <td class="id">' + each[0] + ' </td><td class="data"> '+each[1]+'</td><td class="edit"onclick="updateCall(this,'+ each[0] + ')">Edit</td> <td class="delete"onclick="delData(' + each[0] + ')">DELETE</td>    </tr>' 
                 })
                 tbody.innerHTML=trtd.join("")
             })
         }
         readData()
+        function delData(id){
+            fetch(api+'?del=true&id='+id)
+            .then(res=>res.text())
+            .then(data=>{
+                readData()
+                alert(data)
+            })
+        }
+        function updateCall(elm,id){
+            add.style.display="none"
+            update.style.display="unset"
+            let todo = elm.parentElement.querySelector(".data").textContent;
+            form[0].value=todo;
+            update.setAttribute("onclick",'updateData('+id+')')
+        }
+        function updateData(id){
+            fetch(api + '?update=true&id='+id+'&data='+form[0].value)
+            .then(res=>res.text())
+            .then(data=>{
+                readData()
+                alert(data)
+            })
+        }
     </script>
 </body>
 </html>
